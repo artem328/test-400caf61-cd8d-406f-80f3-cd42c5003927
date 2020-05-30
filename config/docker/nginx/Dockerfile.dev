@@ -1,0 +1,22 @@
+FROM nginx:alpine
+
+WORKDIR /etc/nginx
+
+ENV UPSTREAM=php:9000
+
+ARG HOST_UID=1000
+ARG HOST_GUID=1000
+
+RUN delgroup www-data \
+    && addgroup -g "${HOST_GUID}" www-data \
+    && adduser -u "${HOST_UID}" -G www-data -H -s /bin/sh -D www-data
+
+RUN rm ./conf.d/default.conf
+
+COPY config/docker/nginx/nginx.conf .
+COPY config/docker/nginx/symfony.conf ./sites-available/symfony.conf
+COPY config/docker/nginx/entrypoint.dev.sh /usr/bin/entrypoint
+
+RUN chmod +x /usr/bin/entrypoint
+
+ENTRYPOINT ["/usr/bin/entrypoint"]
