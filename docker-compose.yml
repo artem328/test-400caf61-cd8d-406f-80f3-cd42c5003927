@@ -13,6 +13,8 @@ services:
             - ${HOST_COMPOSER_HOME}:/var/www/html/var/.composer
         environment:
             - COMPOSER_HOME=/var/www/html/var/.composer
+            - XDEBUG_ENABLED
+            - PHP_IDE_CONFIG
     nginx:
         build:
             context: .
