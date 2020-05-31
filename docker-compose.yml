@@ -31,3 +31,7 @@ services:
             - ./var/log:/var/log/nginx
         environment:
             - UPSTREAM=php:9000
+    mailcatcher:
+        image: schickling/mailcatcher
+        ports:
+            - ${EXTERNAL_MAILCATCHER_UI_PORT}:1080
