@@ -6,7 +6,7 @@ namespace App\Form\Type;
 
 use App\Request\HistoryRequest;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,11 +20,13 @@ final class HistoryRequestType extends AbstractType
     {
         $builder
             ->add('symbol')
-            ->add('startDate', DateTimeType::class, [
+            ->add('startDate', DateType::class, [
                 'input' => 'datetime_immutable',
+                'widget' => 'single_text',
             ])
-            ->add('endDate', DateTimeType::class, [
+            ->add('endDate', DateType::class, [
                 'input' => 'datetime_immutable',
+                'widget' => 'single_text',
             ])
             ->add('email', EmailType::class)
         ;

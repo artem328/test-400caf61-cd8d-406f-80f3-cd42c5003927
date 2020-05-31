@@ -1,10 +1,13 @@
-{# @var history App\History\HistoryEntry[] #}
 {% extends 'base.html.twig' %}
 
 {% block title %}History{% endblock %}
 {% block heading %}History{% endblock %}
 
 {% block content %}
+    {% if error is not null %}
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
+    {% endif %}
+
     {{ form_start(form, {action: url('history')}) }}
     {{ form_widget(form) }}
     <div class="form-group row">

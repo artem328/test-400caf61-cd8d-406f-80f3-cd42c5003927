@@ -6,6 +6,7 @@ namespace App\Yahoo;
 
 use App\Yahoo\Request\HistoricalDataRequest;
 use App\Yahoo\Response\HistoricalDataResponse;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
@@ -85,13 +86,25 @@ final class RapidApiYahooClient implements YahooClientInterface
             ->withQuery(\http_build_query($query))
         ;
         $httpRequest = $this->createAuthorizedRequest('GET', $uri);
-        $httpResponse = $this->client->sendRequest($httpRequest);
+        try {
+            $httpResponse = $this->client->sendRequest($httpRequest);
+        } catch (ClientExceptionInterface $e) {
+            throw new RequestException(\sprintf('Failed to send request to historical data endpoint. %s', $e->getMessage()), 0, $e);
+        }
+
+        if (200 !== $httpResponse->getStatusCode()) {
+            throw new RequestException(\sprintf('Historical data API respond with %d', $httpResponse->getStatusCode()));
+        }
 
         $body = $httpResponse->getBody()->getContents();
 
-        $response = $this->serializer->deserialize($body, HistoricalDataResponse::class, 'json', [
-            DateTimeNormalizer::FORMAT_KEY => 'U',
-        ]);
+        try {
+            $response = $this->serializer->deserialize($body, HistoricalDataResponse::class, 'json', [
+                DateTimeNormalizer::FORMAT_KEY => 'U',
+            ]);
+        } catch (\Exception $e) {
+            throw new RequestException(\sprintf('Couldn\'t parse historical response'));
+        }
 
         /* @var HistoricalDataResponse $response */
 

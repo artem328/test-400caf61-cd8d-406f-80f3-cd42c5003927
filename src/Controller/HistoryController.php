@@ -12,7 +12,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -34,17 +33,22 @@ final class HistoryController extends AbstractController
         $form->handleRequest($request);
 
         $history = null;
+        $error = null;
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $history = $historyProvider->getInRange(
-                $historyRequest->symbol,
-                $historyRequest->startDate,
-                $historyRequest->endDate
-            );
+            try {
+                $history = $historyProvider->getInRange(
+                    $historyRequest->symbol,
+                    $historyRequest->startDate,
+                    $historyRequest->endDate
+                );
+            } catch (\Throwable $e) {
+                $error = \sprintf('Error occurred during fetching a history: %s', $e->getMessage());
+            }
 
             try {
                 $mailer->send($emailFactory->createHistoryEmail($historyRequest));
-            } catch (TransportExceptionInterface $e) {
+            } catch (\Throwable $e) {
                 $logger->error('Failed to send a history email. {message}', [
                     'message' => $e->getMessage(),
                     'exception' => $e,
@@ -55,6 +59,7 @@ final class HistoryController extends AbstractController
         return $this->render('history.html.twig', [
             'form' => $form->createView(),
             'history' => $history,
+            'error' => $error,
         ]);
     }
 }
