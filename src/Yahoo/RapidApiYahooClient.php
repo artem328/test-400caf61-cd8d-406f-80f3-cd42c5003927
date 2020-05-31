@@ -14,7 +14,7 @@ use Psr\Http\Message\UriInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
-final class YahooPsrClient implements YahooClientInterface
+final class RapidApiYahooClient implements YahooClientInterface
 {
     /**
      * @var ClientInterface

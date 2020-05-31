@@ -26,4 +26,11 @@ final class HistoricalDataResponse
     {
         return $this->prices;
     }
+
+    public function sortPrices(string $direction = 'ASC'): void
+    {
+        \usort($this->prices, static function (Price $price1, Price $price2) use ($direction): int {
+            return ($price1->getDate() <=> $price2->getDate()) * ('DESC' === \strtoupper($direction) ? -1 : 1);
+        });
+    }
 }

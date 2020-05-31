@@ -1,16 +1,22 @@
 {# @var history App\History\HistoryEntry[] #}
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    <form method="POST" action="{{ url('history') }}">
-        {{ form_widget(form) }}
+{% block title %}History{% endblock %}
+{% block heading %}History{% endblock %}
 
-        <button type="submit">Submit</button>
-    </form>
+{% block content %}
+    {{ form_start(form, {action: url('history')}) }}
+    {{ form_widget(form) }}
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+    {{ form_end(form) }}
 
     {% if history is not null %}
         {% if history is not empty %}
-            <table>
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Date</th>

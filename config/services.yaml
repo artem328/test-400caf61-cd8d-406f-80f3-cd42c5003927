@@ -36,7 +36,7 @@ services:
     Psr\Http\Message\RequestFactoryInterface: '@App\Guzzle\RequestFactory'
     Psr\Http\Message\UriFactoryInterface: '@App\Guzzle\UriFactory'
 
-    App\Yahoo\YahooPsrClient:
+    App\Yahoo\RapidApiYahooClient:
         arguments:
-            $baseUri: '%env(YAHOO_BASE_URI)%'
-            $apiKey: '%env(YAHOO_API_KEY)%'
+            $baseUri: '%env(RAPIDAPI_YAHOO_BASE_URI)%'
+            $apiKey: '%env(RAPIDAPI_API_KEY)%'

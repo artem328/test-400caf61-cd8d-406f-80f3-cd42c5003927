@@ -32,6 +32,8 @@ final class YahooHistoryProvider implements HistoryProviderInterface
             HistoricalDataRequest::FREQUENCY_ONE_DAY
         ));
 
+        $response->sortPrices();
+
         $data = [];
 
         foreach ($response->getPrices() as $price) {
