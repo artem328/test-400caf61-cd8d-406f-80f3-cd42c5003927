@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Request;
 
+use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class HistoryRequest
@@ -12,6 +13,7 @@ final class HistoryRequest
      * @var string
      *
      * @Assert\NotBlank
+     * @AppAssert\ValidSymbol
      */
     public $symbol;
 

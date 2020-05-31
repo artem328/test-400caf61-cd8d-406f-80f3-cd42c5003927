@@ -40,3 +40,11 @@ services:
         arguments:
             $baseUri: '%env(RAPIDAPI_YAHOO_BASE_URI)%'
             $apiKey: '%env(RAPIDAPI_API_KEY)%'
+
+    App\Stock\CompanyProviderInterface: '@App\Stock\DataHubCompanyProvider'
+
+    App\Stock\CachedCompanyProvider:
+        decorates: App\Stock\CompanyProviderInterface
+        arguments:
+            $provider: '@App\Stock\CachedCompanyProvider.inner'
+            $ttl: 120 # 2 minutes
